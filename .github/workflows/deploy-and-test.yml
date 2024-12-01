@@ -1,0 +1,40 @@
+name: Deploy and Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Compile contracts
+      run: npx hardhat compile
+
+    - name: Run tests
+      run: npx hardhat test
+
+    - name: Run coverage
+      run: npx hardhat coverage
+
+    - name: Analyze contracts with Mythril
+      run: ./analyze_contracts.sh
+
+    - name: Deploy contracts
+      run: npx hardhat run deploy/01_deploy_proxy_contracts.js --network rinkeby
+      env:
+        INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
+        RINKEBY_PRIVATE_KEY: ${{ secrets.RINKEBY_PRIVATE_KEY }}

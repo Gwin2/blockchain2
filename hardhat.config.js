@@ -1,13 +1,13 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("hardhat-deploy");
-require("solidity-coverage");
+require('solidity-coverage');
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: "0.8.0",
   namedAccounts: {
     deployer: {
-      default: 0, // Here this will by default take the first account as deployer
+      default: 0,
     },
   },
   networks: {
