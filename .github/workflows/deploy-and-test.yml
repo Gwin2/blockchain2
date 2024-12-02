@@ -18,6 +18,14 @@ jobs:
       with:
         node-version: '14'
 
+    - name: Cache dependencies
+      uses: actions/cache@v2
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
     - name: Install dependencies
       run: npm install
 
@@ -33,8 +41,20 @@ jobs:
     - name: Analyze contracts with Mythril
       run: ./analyze_contracts.sh
 
+    - name: Load environment variables
+      run: npx dotenv -e .env
+
     - name: Deploy contracts
-      run: npx hardhat run deploy/01_deploy_proxy_contracts.js --network rinkeby
+      if: success()  # Only deploy if tests pass
+      run: npx hardhat run deploy/01_deploy_proxy_contracts.js --network mainnet
       env:
-        INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
-        RINKEBY_PRIVATE_KEY: ${{ secrets.RINKEBY_PRIVATE_KEY }}
+        INFURA_API_KEY: ${{ env.INFURA_API_KEY }}
+        MAINNET_PRIVATE_KEY: ${{ env.MAINNET_PRIVATE_KEY }}
+
+    - name: Send notification
+      if: success()
+      run: echo "Deployment successful!"
+
+    - name: Notify failure
+      if: failure()
+      run: echo "Deployment failed!"

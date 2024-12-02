@@ -37,4 +37,19 @@ describe('CourseManagement', function () {
     await courseManagement.connect(student).enrollStudent(0);
     await courseManagement.connect(teacher).confirmEnrollment(0, student.address);
   });
+
+  it('should remove a student from a course', async function () {
+    await courseManagement.connect(owner).createCourse('Blockchain 101', teacher.address);
+    await courseManagement.connect(student).enrollStudent(0);
+    await courseManagement.connect(owner).removeStudent(0, student.address);
+    const course = await courseManagement.getCourse(0);
+    expect(course.students).to.not.include(student.address);
+  });
+
+  it('should update course details', async function () {
+    await courseManagement.connect(owner).createCourse('Blockchain 101', teacher.address);
+    await courseManagement.connect(owner).updateCourse(0, 'Blockchain 102', teacher.address);
+    const course = await courseManagement.getCourse(0);
+    expect(course.name).to.equal('Blockchain 102');
+  });
 });

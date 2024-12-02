@@ -4,7 +4,8 @@ require('solidity-coverage');
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  solidity: "0.8.0",
+  solidity: "0.8.9",
+  defaultNetwork: "hardhat",
   namedAccounts: {
     deployer: {
       default: 0,
@@ -18,9 +19,9 @@ module.exports = {
       url: "http://127.0.0.1:8545",
       chainId: 1337,
     },
-    rinkeby: {
-      url: `https://rinkeby.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
-      accounts: [`0x${process.env.DEPLOYER_PRIVATE_KEY}`],
+    mainnet: {
+      url: process.env.ETH_MAINNET_RPC_URL,
+      accounts: [`0x${process.env.MAINNET_PRIVATE_KEY}`],
     },
   },
 };
