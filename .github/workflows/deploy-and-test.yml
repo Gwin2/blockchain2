@@ -27,7 +27,7 @@ jobs:
           ${{ runner.os }}-node-
 
     - name: Install dependencies
-      run: yarn install
+      run: npm install --force
       
     - name: Compile contracts
       run: npx hardhat compile
