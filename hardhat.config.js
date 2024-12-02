@@ -21,7 +21,7 @@ module.exports = {
     },
     mainnet: {
       url: process.env.ETH_MAINNET_RPC_URL,
-      accounts: [`0x${process.env.MAINNET_PRIVATE_KEY}`],
+      accounts: [process.env.MAINNET_PRIVATE_KEY],
     },
   },
 };
