@@ -2874,10 +2874,10 @@ node-gyp-build@^4.2.0, node-gyp-build@^4.8.4:
   resolved "https://registry.npmjs.org/node-gyp-build/-/node-gyp-build-4.8.4.tgz"
   integrity sha512-LA4ZjwlnUblHVgq0oBF3Jl/6h/Nvs5fzBLwdEF4nuxnFdsfajde4WfxtJr3CaiH+F6ewcIB/q4jQ4UzPyid+CQ==
 
-node@^20.18.1:
-  version "20.18.1"
-  resolved "https://registry.yarnpkg.com/node/-/node-20.18.1.tgz#62bcb92d77b8d55db9b5b79f5461fccb1246c094"
-  integrity sha512-WLHDiy+rNdeNVcKh2Z8a0PVvGfPUyclVUjClNN2+E7encesc8t9LwMNdfV1WCdX+ZyHaZdEe6GbyoxAqoeWnDw==
+node@^22.18.1:
+  version "23.3.0"
+  resolved "https://registry.yarnpkg.com/node/-/node-23.3.0.tgz#d3bb71cd4b768d6edf40da60a83190535cd5959f"
+  integrity sha512-mmegn9ko4TizlGud7PMIUk1Zl8JHeGl7Au7vGxoN38aPPHsqWN9UfWeXcuYnPgXsYqWtk0ogM27lpkQz6jHdgA==
   dependencies:
     node-bin-setup "^1.0.0"
 
