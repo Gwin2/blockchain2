@@ -19,7 +19,7 @@ contract ScheduleManagement is Initializable, UniversityAccessControl {
 
     event ScheduleCreated(uint256 courseId, string date, string time);
 
-    function createSchedule(uint256 _courseId, string memory _date, string memory _time) external onlyRole(Role.Teacher) {
+    function createSchedule(uint256 _courseId, string memory _date, string memory _time) external onlyRole(TEACHER_ROLE) {
         schedules[_courseId].push(Schedule(_courseId, _date, _time));
         emit ScheduleCreated(_courseId, _date, _time);
     }
@@ -28,7 +28,7 @@ contract ScheduleManagement is Initializable, UniversityAccessControl {
         return schedules[_courseId];
     }
 
-    function editSchedule(uint256 _courseId, uint256 _scheduleIndex, string memory _newDate, string memory _newTime) external onlyRole(Role.Teacher) {
+    function editSchedule(uint256 _courseId, uint256 _scheduleIndex, string memory _newDate, string memory _newTime) external onlyRole(TEACHER_ROLE) {
         Schedule storage schedule = schedules[_courseId][_scheduleIndex];
         schedule.date = _newDate;
         schedule.time = _newTime;

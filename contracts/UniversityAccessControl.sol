@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract UniversityAccessControl is Initializable, AccessControlUpgradeable {
@@ -10,8 +9,7 @@ contract UniversityAccessControl is Initializable, AccessControlUpgradeable {
     bytes32 public constant STUDENT_ROLE = keccak256("STUDENT_ROLE");
     bytes32 public constant TEACHER_ROLE = keccak256("TEACHER_ROLE");
 
-    function initialize() public initializer {
-        __AccessControl_init();
+    function initialize() public ERC20("MyToken", "TKN") {
         _setupRole(msg.sender, ADMIN_ROLE);
     }
 
