@@ -2,10 +2,10 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 import "./UniversityAccessControl.sol";
 
-contract CourseManagement is Initializable, AccessControlUpgradeable, UniversityAccessControl {
+contract CourseManagement is Initializable, AccessControl, UniversityAccessControl {
     function initialize() public initializer {
         __AccessControl_init();
         UniversityAccessControl.initialize();

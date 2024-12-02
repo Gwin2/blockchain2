@@ -1,26 +1,21 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
+pragma solidity ^0.8.12;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract UniversityAccessControl is Initializable, AccessControlUpgradeable {
+contract UniversityAccessControl is Initializable, AccessControl {
     
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     bytes32 public constant STUDENT_ROLE = keccak256("STUDENT_ROLE");
     bytes32 public constant TEACHER_ROLE = keccak256("TEACHER_ROLE");
 
-    function initialize() public ERC20("MyToken", "TKN") {
-        _setupRole(msg.sender, ADMIN_ROLE);
+    function initialize() public initializer {
+        _grantRole(ADMIN_ROLE, msg.sender);
     }
-
+    
     enum Role { None, Student, Teacher, Admin }
 
     event RoleAssigned(address indexed account, Role role);
-
-    modifier onlyRole(Role _role) {
-        require(hasRole(_role, msg.sender), "AccessControl: Access denied");
-        _;
-    }
 
     function assignRole(address _account, Role _role) external onlyRole(ADMIN_ROLE) {
         require(_role != Role.None, "Invalid role");
@@ -41,14 +36,14 @@ contract UniversityAccessControl is Initializable, AccessControlUpgradeable {
         return keccak256("");
     }
 
-    function hasRole(Role _role, address _account) public view returns (bool) {
-        return hasRole(getRoleHash(_role), _account);
+    function hasRole(bytes32 _role, address _account) public view override returns (bool) {
+        return super.hasRole(_role, _account);
     }
 
     function getRole(address _account) external view returns (Role) {
-        if (hasRole(getRoleHash(Role.Student), _account)) return Role.Student;
-        if (hasRole(getRoleHash(Role.Teacher), _account)) return Role.Teacher;
-        if (hasRole(getRoleHash(Role.Admin), _account)) return Role.Admin;
+        if (hasRole(STUDENT_ROLE, _account)) return Role.Student;
+        if (hasRole(TEACHER_ROLE, _account)) return Role.Teacher;
+        if (hasRole(ADMIN_ROLE, _account)) return Role.Admin;
         return Role.None;
     }
 }
