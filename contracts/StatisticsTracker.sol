@@ -7,16 +7,16 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract StatisticsTracker is Initializable, GradeManagement, ScheduleManagement {
  
-    function initialize() public initializer {
+    function initialize() public override(GradeManagement, ScheduleManagement) initializer {
         GradeManagement.initialize();
         ScheduleManagement.initialize();
     }
 
-    function getGrades(uint256 _courseId) public view override returns (Grade[] memory) {
+    function getGrades(uint256 _courseId) public view virtual override returns (Grade[] memory) {
         return GradeManagement.getGrades(_courseId);
     }
 
-    function getAttendance(uint256 _courseId) public view override returns (Attendance[] memory) {
+    function getAttendance(uint256 _courseId) public view virtual override returns (Attendance[] memory) {
         return GradeManagement.getAttendance(_courseId);
     }
 

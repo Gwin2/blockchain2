@@ -11,9 +11,13 @@ describe("UniversityAccessControl", function () {
     accessControl = await AccessControl.deploy();
     await accessControl.deployed();
 
-    await accessControl.assignRole(admin.address, 2); // Assign Admin role
-    await accessControl.assignRole(teacher.address, 1); // Assign Teacher role
-    await accessControl.assignRole(student.address, 0); // Assign Student role
+    await accessControl.assignRole(admin.address, 2);
+    await accessControl.assignRole(teacher.address, 1);
+    await accessControl.assignRole(student.address, 0);
+  });
+
+  it("Should initialize correctly", async function () {
+    await accessControl.initialize();
   });
 
   it("Should have correct roles for test accounts", async function () {

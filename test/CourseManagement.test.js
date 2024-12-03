@@ -18,6 +18,11 @@ describe('CourseManagement', function () {
     await universityAccessControl.assignRole(student.address, 1);
   });
 
+  it("Should initialize correctly", async function () {
+    await courseManagement.initialize();
+    // Add assertions to verify initialization
+  });
+
   it('should create a course', async function () {
     await courseManagement.connect(owner).createCourse('Blockchain 101', teacher.address);
     const course = await courseManagement.getCourse(0);

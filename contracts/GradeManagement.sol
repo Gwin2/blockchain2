@@ -5,7 +5,8 @@ import "./UniversityAccessControl.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract GradeManagement is Initializable, UniversityAccessControl {
-    function initialize() public initializer {
+
+    function initialize() public override initializer {
         UniversityAccessControl.initialize();
     }
 
@@ -28,14 +29,14 @@ contract GradeManagement is Initializable, UniversityAccessControl {
     event GradeRecorded(uint256 courseId, address indexed student, uint8 grade);
     event AttendanceMarked(uint256 courseId, address indexed student, bool attended);
 
-    function recordGrade(uint256 _courseId, address _student, uint8 _grade) external onlyRole(Role.Teacher) {
-        require(hasRole(msg.sender, Role.Teacher), "Assigned teacher must have Teacher role");
+    function recordGrade(uint256 _courseId, address _student, uint8 _grade) external onlyRole(TEACHER_ROLE) {
+        require(hasRole(TEACHER_ROLE, msg.sender), "Assigned teacher must have Teacher role");
         grades[_courseId].push(Grade(_courseId, _student, _grade, block.timestamp));
         emit GradeRecorded(_courseId, _student, _grade);
     }
 
-    function markAttendance(uint256 _courseId, address _student, bool _attended) external onlyRole(Role.Teacher) {
-        require(hasRole(msg.sender, Role.Teacher), "Assigned teacher must have Teacher role");
+    function markAttendance(uint256 _courseId, address _student, bool _attended) external onlyRole(TEACHER_ROLE) {
+        require(hasRole(TEACHER_ROLE, msg.sender), "Assigned teacher must have Teacher role");
         attendanceRecords[_courseId].push(Attendance(_courseId, _student, _attended));
         emit AttendanceMarked(_courseId, _student, _attended);
     }
@@ -91,7 +92,7 @@ contract GradeManagement is Initializable, UniversityAccessControl {
     }
 
     function viewGradesByTeacher(uint256 _courseId, address _teacher) external view returns (Grade[] memory) {
-        require(hasRole(_teacher, Role.Teacher), "Address is not a teacher");
+        require(hasRole(TEACHER_ROLE, _teacher), "Address is not a teacher");
         return grades[_courseId];
     }
 

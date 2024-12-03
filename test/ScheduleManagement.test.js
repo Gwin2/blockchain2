@@ -11,7 +11,12 @@ describe("ScheduleManagement", function () {
     scheduleManagement = await ScheduleManagement.deploy();
     await scheduleManagement.deployed();
 
-    await scheduleManagement.assignRole(teacher.address, 1); // Assign Teacher role
+    await scheduleManagement.assignRole(teacher.address, 1);
+  });
+
+  it("Should initialize correctly", async function () {
+    await scheduleManagement.initialize();
+    // Add assertions to verify initialization
   });
 
   it("Should create and edit schedules", async function () {

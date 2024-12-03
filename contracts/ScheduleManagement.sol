@@ -5,7 +5,8 @@ import "./UniversityAccessControl.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract ScheduleManagement is Initializable, UniversityAccessControl {
-    function initialize() public initializer {
+
+    function initialize() public override initializer {
         UniversityAccessControl.initialize();
     }
 
