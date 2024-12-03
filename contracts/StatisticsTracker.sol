@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.9;
 
 import "./GradeManagement.sol";
 import "./ScheduleManagement.sol";
@@ -7,7 +7,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract StatisticsTracker is Initializable, GradeManagement, ScheduleManagement {
  
-    function initialize() public override(GradeManagement, ScheduleManagement) initializer {
+    function initialize() public virtual override(GradeManagement, ScheduleManagement) initializer {
         GradeManagement.initialize();
         ScheduleManagement.initialize();
     }

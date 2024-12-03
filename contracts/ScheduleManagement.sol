@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.9;
 
 import "./UniversityAccessControl.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract ScheduleManagement is Initializable, UniversityAccessControl {
 
-    function initialize() public override initializer {
+    function initialize() public virtual override initializer {
         UniversityAccessControl.initialize();
     }
 

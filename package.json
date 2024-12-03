@@ -4,7 +4,10 @@
   "description": "## Overview A decentralized blockchain application for tracking university student performance, course management, and analytics.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy": "hardhat run scripts/deploy.js --network localhost",
+    "deploy:mainnet": "hardhat run scripts/deploy.js --network mainnet"
   },
   "keywords": [],
   "author": "Gwin232 <snytkinaleksandr5@mail.ru>",
@@ -29,6 +32,7 @@
   },
   "dependencies": {
     "@openzeppelin/contracts-upgradeable": "^5.1.0",
+    "@openzeppelin/hardhat-upgrades": "^3.6.0",
     "abbrev": "^1.0.9",
     "acorn": "^8.14.0",
     "acorn-walk": "^8.3.4",

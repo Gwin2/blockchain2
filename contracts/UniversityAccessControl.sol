@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.12;
+pragma solidity ^0.8.9;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
@@ -9,7 +9,7 @@ contract UniversityAccessControl is Initializable, AccessControl {
     bytes32 public constant STUDENT_ROLE = keccak256("STUDENT_ROLE");
     bytes32 public constant TEACHER_ROLE = keccak256("TEACHER_ROLE");
 
-    function initialize() public initializer {
+    function initialize() public virtual initializer {
         _grantRole(ADMIN_ROLE, msg.sender);
     }
     

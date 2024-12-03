@@ -22,21 +22,21 @@ jobs:
       uses: actions/cache@v2
       with:
         path: node_modules
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
           ${{ runner.os }}-node-
 
     - name: Install dependencies
-      run: npm install --force
+      run: yarn install --frozen-lockfile
       
     - name: Compile contracts
-      run: npx hardhat compile
+      run: yarn hardhat compile
 
     - name: Run tests
-      run: npx hardhat test
+      run: yarn hardhat test
 
     - name: Run coverage
-      run: npx hardhat coverage
+      run: yarn hardhat coverage
 
     - name: Analyze contracts with Mythril
       run: ./analyze_contracts.sh
@@ -46,7 +46,9 @@ jobs:
 
     - name: Deploy contracts
       if: success()  # Only deploy if tests pass
-      run: npx hardhat run deploy/01_deploy_proxy_contracts.js --network mainnet
+      run: |
+        yarn hardhat run scripts/deploy.js --network localhost
+        yarn hardhat run scripts/deploy.js --network mainnet
       env:
         INFURA_API_KEY: ${{ env.INFURA_API_KEY }}
         MAINNET_PRIVATE_KEY: ${{ env.MAINNET_PRIVATE_KEY }}

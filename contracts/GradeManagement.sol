@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.9;
 
 import "./UniversityAccessControl.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract GradeManagement is Initializable, UniversityAccessControl {
 
-    function initialize() public override initializer {
+    function initialize() public virtual override initializer {
         UniversityAccessControl.initialize();
     }
 
@@ -41,11 +41,11 @@ contract GradeManagement is Initializable, UniversityAccessControl {
         emit AttendanceMarked(_courseId, _student, _attended);
     }
 
-    function getGrades(uint256 _courseId) public view returns (Grade[] memory) {
+    function getGrades(uint256 _courseId) public virtual view returns (Grade[] memory) {
         return grades[_courseId];
     }
 
-    function getAttendance(uint256 _courseId) public view returns (Attendance[] memory) {
+    function getAttendance(uint256 _courseId) public virtual view returns (Attendance[] memory) {
         return attendanceRecords[_courseId];
     }
 

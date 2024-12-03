@@ -6,18 +6,19 @@ describe("UniversityAccessControl", function () {
 
   beforeEach(async function () {
     [owner, admin, teacher, student] = await ethers.getSigners();
-
-    const AccessControl = await ethers.getContractFactory("UniversityAccessControl");
+    const AccessControl = await ethers.getContractFactory('UniversityAccessControl');
     accessControl = await AccessControl.deploy();
-    await accessControl.deployed();
 
+    await accessControl.deployed();
+    await accessControl.initialize();
+    await accessControl.assignRole(owner.address, ethers.utils.id("DEFAULT_ADMIN_ROLE"));
     await accessControl.assignRole(admin.address, 2);
     await accessControl.assignRole(teacher.address, 1);
     await accessControl.assignRole(student.address, 0);
   });
 
   it("Should initialize correctly", async function () {
-    await accessControl.initialize();
+    expect(await accessControl.hasRole(ethers.utils.id("DEFAULT_ADMIN_ROLE"), owner.address)).to.be.true;
   });
 
   it("Should have correct roles for test accounts", async function () {
