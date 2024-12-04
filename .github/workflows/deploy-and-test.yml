@@ -46,13 +46,8 @@ jobs:
 
     - name: Deploy contracts
       if: success()  # Only deploy if tests pass
-      run: |
-        yarn hardhat run scripts/deploy.js --network localhost
-        yarn hardhat run scripts/deploy.js --network mainnet
-      env:
-        INFURA_API_KEY: ${{ env.INFURA_API_KEY }}
-        MAINNET_PRIVATE_KEY: ${{ env.MAINNET_PRIVATE_KEY }}
-        ETH_MAINNET_RPC_URL: https://mainnet.infura.io/v3/${{ env.INFURA_API_KEY }}
+      run:
+        yarn hardhat node & yarn hardhat run scripts/deploy.js --network localhost
 
     - name: Send notification
       if: success()

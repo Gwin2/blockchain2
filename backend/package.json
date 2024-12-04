@@ -1,0 +1,17 @@
+{
+  "name": "university-blockchain-backend",
+  "version": "1.0.0",
+  "description": "Backend for interacting with university blockchain smart contracts",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "web3": "^1.5.2",
+    "commander": "^9.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^9.0.0",
+    "chai": "^4.3.0"
+  }
+}
