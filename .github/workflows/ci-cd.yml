@@ -30,6 +30,10 @@ jobs:
       run: |
         pytest backend/tests
 
+    - name: Run Telegram Bot tests
+      run: |
+        pytest backend/tests/test_telegram_bot.py
+
     - name: Build Docker image
       run: |
         docker build -t university-blockchain-tracker .
@@ -67,3 +71,13 @@ jobs:
         DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
       run: |
         npx hardhat run scripts/deploy.js --network rinkeby
+
+    - name: Run Telegram Bot tests
+      run: |
+        pytest backend/tests/test_telegram_bot.py
+
+    - name: Deploy to Docker Swarm
+      run: |
+        docker swarm init || true
+        docker stack deploy --compose-file docker-compose.yml university-blockchain-tracker
+        docker service ls

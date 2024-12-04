@@ -1,3 +1,6 @@
 Flask
 Flask-WTF
 web3
+python-telegram-bot
+pytest
+pytest-mock

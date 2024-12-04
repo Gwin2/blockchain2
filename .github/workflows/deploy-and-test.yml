@@ -44,10 +44,22 @@ jobs:
     - name: Load environment variables
       run: npx dotenv -e .env
 
-    - name: Deploy contracts
+    - name: Run Hardhat tests
+      run: |
+        npx hardhat test
+
+    - name: Deploy contracts to localhost
       if: success()  # Only deploy if tests pass
       run:
         yarn hardhat node & yarn hardhat run scripts/deploy.js --network localhost
+
+    - name: Deploy contracts to Rinkeby
+      if: success()  # Only deploy if tests pass
+      env:
+        INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
+        DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+      run: |
+        npx hardhat run scripts/deploy.js --network rinkeby
 
     - name: Send notification
       if: success()
