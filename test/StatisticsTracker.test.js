@@ -9,7 +9,7 @@ describe("StatisticsTracker", function () {
     [owner, teacher, student] = await ethers.getSigners();
     StatisticsTracker = await ethers.getContractFactory('StatisticsTracker');
     statisticsTracker = await upgrades.deployProxy(StatisticsTracker, { initializer: 'initialize' });
-    await statisticsTracker.deployed();
+    await statisticsTracker.waitForDeployment();
 
     await statisticsTracker.assignRole(teacher.address, 1);
     await statisticsTracker.assignRole(student.address, 0);

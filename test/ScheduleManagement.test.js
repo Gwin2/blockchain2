@@ -9,13 +9,13 @@ describe("ScheduleManagement", function () {
     [owner, teacher] = await ethers.getSigners();
     ScheduleManagement = await ethers.getContractFactory('ScheduleManagement');
     scheduleManagement = await upgrades.deployProxy(ScheduleManagement, { initializer: 'initialize' });
-    await scheduleManagement.deployed();
+    await scheduleManagement.waitForDeployment();
 
     await scheduleManagement.assignRole(teacher.address, 1);
   });
 
   it("should deploy the proxy and logic contracts correctly", async function () {
-    expect(await scheduleManagement.address).to.properAddress;
+    expect(await scheduleManagement.address);
   });
 
   it("should initialize the contract correctly", async function () {

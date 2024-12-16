@@ -9,21 +9,19 @@ describe("GradeManagement", function () {
     [owner, teacher, student] = await ethers.getSigners();
     GradeManagement = await ethers.getContractFactory('GradeManagement');
     gradeManagement = await upgrades.deployProxy(GradeManagement, { initializer: 'initialize' });
-    await gradeManagement.deployed();
+    await gradeManagement.waitForDeployment();
 
     await gradeManagement.assignRole(teacher.address, 1);
     await gradeManagement.assignRole(student.address, 0);
   });
 
   it("should deploy the proxy and logic contracts correctly", async function () {
-    expect(await gradeManagement.address).to.properAddress;
+    expect(gradeManagement.address).to.be.properAddress;
   });
 
   it("should initialize the contract correctly", async function () {
-  });
-
-  it("Should initialize correctly", async function () {
     await gradeManagement.initialize();
+    // Add assertions to verify initialization state if applicable
   });
 
   it("Should record and retrieve grades", async function () {

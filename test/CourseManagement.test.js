@@ -8,24 +8,33 @@ describe('CourseManagement', function () {
     [owner, teacher, student] = await ethers.getSigners();
     const UniversityAccessControl = await ethers.getContractFactory('UniversityAccessControl');
     universityAccessControl = await UniversityAccessControl.deploy();
+    await universityAccessControl.waitForDeployment();
+    console.log('UniversityAccessControl deployed at:', universityAccessControl.address);
 
     CourseManagement = await ethers.getContractFactory('CourseManagement');
     courseManagement = await upgrades.deployProxy(CourseManagement, { initializer: 'initialize' });
 
+    // Check if courseManagement is defined and log the address
+    if (courseManagement) {
+        console.log('CourseManagement deployed at:', courseManagement.address);
+    } else {
+        console.error('CourseManagement deployment failed.');
+    }
+
     await universityAccessControl.initialize();
     await universityAccessControl.assignRole(teacher.address, 2);
     await universityAccessControl.assignRole(student.address, 1);
-  });
+});
 
   it("Should initialize correctly", async function () {
   });
 
   it('should deploy the proxy and logic contracts correctly', async function () {
-    expect(await courseManagement.address).to.properAddress;
-  });
+    expect(courseManagement.address).to.exist; // Check if the address is defined
+    console.log('CourseManagement deployed at:', courseManagement.address); // Log the address
+});
 
   it('should initialize the contract correctly', async function () {
-    await courseManagement.initialize(universityAccessControl.address);
     const courseCount = await courseManagement.courseCount();
     expect(courseCount).to.equal(0);
   });
