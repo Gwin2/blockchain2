@@ -1,19 +1,18 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("hardhat-deploy");
-require('solidity-coverage');
 require('@openzeppelin/hardhat-upgrades');
+require("solidity-coverage");
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: {
-    compilers: [
-      {
-        version: "0.8.9",
-      },
-      {
-        version: "0.8.20",
-      },
-    ],
+    version: "0.8.20",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200
+      }
+    }
   },
   defaultNetwork: "hardhat",
   namedAccounts: {
@@ -29,20 +28,21 @@ module.exports = {
       url: "http://127.0.0.1:8545",
       chainId: 1337,
     },
-    // mainnet: {
-    //   url: process.env.ETH_MAINNET_RPC_URL,
-    //   accounts: [process.env.MAINNET_PRIVATE_KEY],
-    // },
-    // rinkeby: {
-    //   url: process.env.ETH_RINKEBY_RPC_URL,
-    //   accounts: [process.env.RINKEBY_PRIVATE_KEY],
-    // }
+    coverage: {
+      url: 'http://127.0.0.1:8555',
+      gas: 0x1fffffffffffff,
+      gasPrice: 0x1,
+      baseFee: 1,
+      initialBaseFee: 1,
+    }
   },
   paths: {
     sources: "./contracts",
     tests: "./test",
     cache: "./cache",
-    artifacts: "./artifacts"
+    artifacts: "./artifacts",
+    coverage: "./coverage",
+    coverageJson: "./coverage.json"
   },
   mocha: {
     timeout: 20000
