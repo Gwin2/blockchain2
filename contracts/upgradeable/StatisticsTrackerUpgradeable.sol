@@ -12,7 +12,7 @@ contract StatisticsTrackerUpgradeable is Initializable, GradeManagementUpgradeab
         _disableInitializers();
     }
  
-    function initialize() public initializer {
+    function initialize() public override(GradeManagementUpgradeable, ScheduleManagementUpgradeable) initializer {
         __AccessControl_init();
         _grantRole(ADMIN_ROLE, msg.sender);
     }

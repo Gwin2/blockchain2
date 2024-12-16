@@ -26,7 +26,7 @@ contract CourseManagementUpgradeable is Initializable, UniversityAccessControlUp
         _disableInitializers();
     }
 
-    function initialize() public initializer {
+    function initialize() public override initializer {
         __AccessControl_init();
         _grantRole(ADMIN_ROLE, msg.sender);
     }
