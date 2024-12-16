@@ -9,9 +9,8 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  test:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -21,33 +20,39 @@ jobs:
       with:
         python-version: '3.9'
 
-    - name: Install dependencies
+    - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r backend/requirements.txt
 
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - name: Install Node dependencies
+      run: |
+        npm install
+
+    - name: Run Solidity tests
+      run: |
+        npx hardhat test
+        npx hardhat coverage
+
     - name: Run Python tests
       run: |
-        pytest backend/tests
+        pytest backend/tests --cov=backend
+        pytest backend/tests/test_telegram_bot.py --cov=backend.telegram_bot
 
-    - name: Run Telegram Bot tests
-      run: |
-        pytest backend/tests/test_telegram_bot.py
-
-    - name: Build Docker image
-      run: |
-        docker build -t university-blockchain-tracker .
-
-    - name: Deploy to Docker Swarm
-      run: |
-        docker swarm init || true
-        docker stack deploy --compose-file docker-compose.yml university-blockchain-tracker
-        docker service ls
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
 
   deploy-contracts:
+    needs: test
     runs-on: ubuntu-latest
-    needs: build-and-deploy
-
+    if: github.ref == 'refs/heads/main'
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -55,29 +60,58 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: '16'
 
     - name: Install dependencies
       run: |
         npm install
 
-    - name: Run Hardhat tests
-      run: |
-        npx hardhat test
-
-    - name: Deploy contracts
+    - name: Deploy proxy contracts
       env:
         INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
         DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+        ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
       run: |
-        npx hardhat run scripts/deploy.js --network rinkeby
+        npx hardhat run scripts/deploy_proxies.js --network sepolia
+        npx hardhat verify --network sepolia $(cat .deployed/ProxyAdmin.address)
+        npx hardhat verify --network sepolia $(cat .deployed/UniversityAccessControlProxy.address)
+        npx hardhat verify --network sepolia $(cat .deployed/CourseManagementProxy.address)
+        npx hardhat verify --network sepolia $(cat .deployed/GradeManagementProxy.address)
+        npx hardhat verify --network sepolia $(cat .deployed/ScheduleManagementProxy.address)
+        npx hardhat verify --network sepolia $(cat .deployed/StatisticsTrackerProxy.address)
 
-    - name: Run Telegram Bot tests
-      run: |
-        pytest backend/tests/test_telegram_bot.py
+  build-and-deploy:
+    needs: deploy-contracts
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    - name: Deploy to Docker Swarm
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build and push Docker image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: university-blockchain-tracker
+        IMAGE_TAG: ${{ github.sha }}
       run: |
-        docker swarm init || true
-        docker stack deploy --compose-file docker-compose.yml university-blockchain-tracker
-        docker service ls
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+    - name: Deploy to ECS
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: university-blockchain-tracker
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        aws ecs update-service --cluster university-blockchain --service university-blockchain-service --force-new-deployment
